@@ -106,43 +106,38 @@
   <script src="js/jquery.waypoints.min.js"></script>
   <script src="js/jquery.countdown.min.js"></script>
   <script src="js/main.js"></script>
-<script>
-    $(document).ready(function () {
-      $('#contactForm').on('submit', function (e) {
-        e.preventDefault(); // Mencegah form redirect halaman
+  <script>
+  $(document).ready(function () {
+    $('#contactForm').on('submit', function (e) {
+      e.preventDefault();
 
-        var $btn = $('#btnKirim');
-        var $alert = $('#formAlert');
+      var $btn = $('#btnKirim');
+      var $alert = $('#formAlert');
 
-        // Ubah state tombol menjadi loading
-        $btn.prop('disabled', true).text('Sending...');
-        $alert.addClass('d-none').removeClass('alert-success alert-danger');
+      $btn.prop('disabled', true).text('Sending...');
+      $alert.addClass('d-none').removeClass('alert-success alert-danger');
 
-        // Kirim data via AJAX ke Send-email.php
-        $.ajax({
-          url: 'https://formspree.io/f/xbdeqadr',
-          type: 'POST',
-          data: $(this).serialize(),
-          success: function (response) {
-            // Memastikan response dari PHP adalah "Message sent"
-            if (response.trim() === "Message sent") {
-              $alert.removeClass('d-none').addClass('alert-success').text('Your message has been sent successfully!');
-              $('#contactForm')[0].reset(); // Reset isi form jika sukses
-            } else {
-              $alert.removeClass('d-none').addClass('alert-danger').text('Failed to send message: ' + response);
-            }
-          },
-          error: function () {
-            $alert.removeClass('d-none').addClass('alert-danger').text('An error occurred. Please try again.');
-          },
-          complete: function () {
-            // Kembalikan state tombol semula
-            $btn.prop('disabled', false).text('Send Message');
-          }
-        });
+      $.ajax({
+        // GANTI URL DI BAWAH INI DENGAN ENDPOINT FORMSPREE ANDA
+        url: 'https://formspree.io/f/XG_KODE_FORMSPREE_ANDA', 
+        type: 'POST',
+        data: $(this).serialize(),
+        dataType: 'json',
+        success: function (response) {
+          // Formspree mengembalikan status sukses jika berhasil
+          $alert.removeClass('d-none').addClass('alert-success').text('Your message has been sent successfully!');
+          $('#contactForm')[0].reset(); 
+        },
+        error: function (err) {
+          $alert.removeClass('d-none').addClass('alert-danger').text('Failed to send message. Please try again.');
+        },
+        complete: function () {
+          $btn.prop('disabled', false).text('Send Message');
+        }
       });
     });
-  </script>
+  });
+</script>
 </body>
 
 </html>
